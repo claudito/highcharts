@@ -1,29 +1,32 @@
-<?php
+<?php 
+include('configuracion.php');
+include('bd/conexion.php'); 
+$db = new Conexion();
 
-				require_once("conexion/conexion.php");
-
-?>
+ ?>
 <!DOCTYPE HTML>
 <html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<title>Highcharts Example</title>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>Grafico de Pie</title>
 
-		<script type="text/javascript" 
-        src="Highcharts-4.1.5/js/jquery.js"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
         <style type="text/css">
 ${demo.css}
-		</style>
-		<script type="text/javascript">
+        </style>
+        <script type="text/javascript">
 $(function () {
     $('#container').highcharts({
         chart: {
-            plotBackgroundColor: null,
-            plotBorderWidth: null,
-            plotShadow: false
+            type: 'pie',
+            options3d: {
+                enabled: true,
+                alpha: 45,
+                beta: 0
+            }
         },
         title: {
-            text: 'PERSONAS QUE DEBEN, 2015'
+            text: 'Lista de Empleados / PIE 3D'
         },
         tooltip: {
             pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -32,46 +35,55 @@ $(function () {
             pie: {
                 allowPointSelect: true,
                 cursor: 'pointer',
+                depth: 35,
                 dataLabels: {
                     enabled: true,
-                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-                    style: {
-                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-                    }
+                    format: '{point.name}'
                 }
             }
         },
         series: [{
             type: 'pie',
-            name: 'Deudores',
+            name: 'Browser share',
             data: [
-			
-			<?php
-			$sql=mysql_query("select * from empleados");
-			while($res=mysql_fetch_array($sql)){
-			?>
-			
-                ['<?php echo $res['nombres']; ?>', <?php echo $res['sueldo'] ?>],
-			
-			<?php
-			}
-			?>	
+           <?php 
+             $query  = "SELECT * FROM empleados";
+             $result = $db->query($query); 
+             while ($fila = mysqli_fetch_array($result)) {
+        
 
+           ?>
+
+
+                ['<?php echo $fila["nombres"]; ?>', <?php echo $fila["sueldo"]; ?>],
+
+        <?php 
+
+           }
+       
+           ?>
+
+                
             ]
         }]
     });
 });
+        </script>
+    </head>
+    <body>
 
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/highcharts-3d.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 
-		</script>
-	</head>
-	<body>
-<script src="Highcharts-4.1.5/js/highcharts.js"></script>
-<script src="Highcharts-4.1.5/js/modules/exporting.js"></script>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+         <div id="container"></div>
+        </div>
+    </div>
+</div>
 
-<div id="container" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
-<br><br>
-<center><a href="ejemplo2.php">Ver ejemplo 2</a></center>
-
-	</body>
+</body>
 </html>
